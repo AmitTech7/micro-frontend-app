@@ -1,0 +1,9 @@
+{
+  "name": "micro-frontend-demo",
+  "private": true,
+  "packageManager": "pnpm@10.33.2",
+  "scripts": {
+    "start:all": "pnpm -r --parallel start",
+    "typecheck": "pnpm -r typecheck"
+  }
+}

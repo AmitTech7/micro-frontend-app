@@ -1,0 +1,10 @@
+body { margin: 0; font-family: system-ui, sans-serif; }
+.layout { display: flex; flex-direction: column; min-height: 100vh; }
+.header { background: #1f2937; color: #fff; padding: 14px 20px; }
+.body { display: flex; flex: 1; }
+.sidebar { width: 200px; background: #f3f4f6; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+.sidebar a { color: #374151; text-decoration: none; padding: 6px 10px; border-radius: 4px; }
+.sidebar a.active { background: #2563eb; color: #fff; }
+.sidebar .group { margin-top: 12px; font-size: 12px; text-transform: uppercase; color: #6b7280; }
+.content { flex: 1; padding: 20px; }
+.error { color: #b91c1c; }
