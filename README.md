@@ -25,6 +25,8 @@ Open:
 
 **Full step-by-step explanation (good for walkthroughs): [WORKFLOW.md](WORKFLOW.md).**
 
+**How routing and `mount` work (add-a-page checklist): [ROUTING-EXPLAINED.md](ROUTING-EXPLAINED.md).**
+
 **Deploying to Vercel: [DEPLOY.md](DEPLOY.md)** (three separate projects: host, products, cart).
 
 Written in TypeScript. Check types in all apps with `pnpm typecheck`.

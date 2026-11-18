@@ -203,6 +203,8 @@ The layout is `Header` + `Sidebar` + the content area where these routes render.
 | `/` | none (host) | Welcome text |
 | `/products/list` | products | `ListPage` |
 | `/products/featured` | products | `FeaturedPage` |
+| `/products/categories` | products | `CategoriesPage` (list) |
+| `/products/categories/42` | products | `CategoriesPage` (detail for id 42) |
 | `/cart/items` | cart | `ItemsPage` |
 | `/cart/summary` | cart | `SummaryPage` |
 
@@ -253,9 +255,13 @@ This is the main benefit of micro frontends: one broken piece does not take down
 The `mount` contract is the most important thing to keep in sync, so it is typed:
 
 ```ts
-type MountProps  = { page?: string };
+type MountProps  = { page?: string; id?: string; navigate?: (path: string) => void };
 type MountResult = { unmount: () => void };
 ```
+
+- `page` and `id` come from the URL (`/products/categories/42`).
+- `navigate` is given by the host, so a remote can change the URL without having its own router.
+  See [ROUTING-EXPLAINED.md](ROUTING-EXPLAINED.md) for the full story.
 
 - Each remote's `mount.tsx` exports these types.
 - The host cannot see remote code at build time (it arrives at runtime), so

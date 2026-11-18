@@ -8,6 +8,7 @@ export default function Sidebar() {
       <div className="group">Products (remote)</div>
       <NavLink to="/products/list">List</NavLink>
       <NavLink to="/products/featured">Featured</NavLink>
+      <NavLink to="/products/categories">Categories</NavLink>
 
       <div className="group">Cart (remote)</div>
       <NavLink to="/cart/items">Items</NavLink>

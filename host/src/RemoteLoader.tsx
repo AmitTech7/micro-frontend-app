@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 type RemoteName = "products" | "cart";
 type Status = "loading" | "ready" | "error";
@@ -13,9 +13,15 @@ const loaders: Record<RemoteName, () => Promise<typeof import("products/mount")>
 };
 
 export default function RemoteLoader({ remote }: Readonly<{ remote: RemoteName }>) {
-  const { page } = useParams();
+  // From the URL: /products/categories/42 -> page = "categories", id = "42"
+  const { page, id } = useParams();
+  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<Status>("loading");
+
+  // Always call the latest navigate, without re-running the effect when it changes.
+  const navigateRef = useRef(navigate);
+  navigateRef.current = navigate;
 
   useEffect(() => {
     let cancelled = false;
@@ -29,8 +35,13 @@ export default function RemoteLoader({ remote }: Readonly<{ remote: RemoteName }
     loaders[remote]()
       .then(({ mount }) => {
         if (cancelled) return;
-        // Hand the remote a DOM node; it renders itself inside it.
-        mounted = mount(el, { page });
+        // Hand the remote a DOM node, the page/id from the URL, and a way to
+        // change the URL. The remote renders itself inside the node.
+        mounted = mount(el, {
+          page,
+          id,
+          navigate: (path) => navigateRef.current(path),
+        });
         setStatus("ready");
       })
       .catch((err) => {
@@ -43,7 +54,7 @@ export default function RemoteLoader({ remote }: Readonly<{ remote: RemoteName }
       if (mounted) mounted.unmount(); // clean up when the page/route changes
       el.remove();
     };
-  }, [remote, page]);
+  }, [remote, page, id]);
 
   return (
     <div>

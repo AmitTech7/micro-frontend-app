@@ -15,7 +15,10 @@ export default function App() {
               <Route path="/" element={<h2>Welcome to the shell app</h2>} />
               {/* :page becomes "list" / "featured" / "items" / "summary" */}
               <Route path="/products/:page" element={<RemoteLoader remote="products" />} />
+              {/* detail pages: /products/categories/42 -> page "categories", id "42" */}
+              <Route path="/products/:page/:id" element={<RemoteLoader remote="products" />} />
               <Route path="/cart/:page" element={<RemoteLoader remote="cart" />} />
+              <Route path="/cart/:page/:id" element={<RemoteLoader remote="cart" />} />
               <Route path="*" element={<h2>Not found</h2>} />
             </Routes>
           </main>
