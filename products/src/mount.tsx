@@ -18,11 +18,10 @@ const pages: Record<string, (props: PageProps) => JSX.Element> = {
   featured: FeaturedPage,
   categories: CategoriesPage,
 };
-
 // The host only knows this function. It knows nothing about our components.
 export function mount(
   el: HTMLElement,
-  { page = "list", id, navigate }: MountProps = {},
+  { page: number = "list", id, navigate }: MountProps = {},
 ): MountResult {
   const Page = pages[page] ?? ListPage;
   const root = createRoot(el);
