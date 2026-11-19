@@ -26,10 +26,10 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ matrix.app == 'products' && secrets.VERCEL_PRODUCTS_ID || secrets.VERCEL_CART_ID }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
       - run: npx --yes vercel@latest deploy --prod --yes
 
   # Step B: deploy the host only after both remotes succeeded
@@ -41,8 +41,8 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_HOST_ID }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 20
+          node-version: 24
       - run: npx --yes vercel@latest deploy --prod --yes
