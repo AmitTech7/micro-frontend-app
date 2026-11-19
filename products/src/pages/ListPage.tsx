@@ -8,8 +8,7 @@ const products: Product[] = [
 ];
 
 // CI/CD demo: this visible line should only appear on the live site after the PR is merged.
-// The type below is deliberately wrong (a string assigned to a number) so CI fails first.
-const deployNote: string  = "Deployed through the v7 CI/CD pipeline";
+const deployNote: string = "Deployed by the v7 per-app pipeline: only products was rebuilt";
 
 export default function ListPage() {
   return (
