@@ -8,7 +8,7 @@ const products: Product[] = [
 ];
 
 // CI/CD demo: this visible line should only appear on the live site after the PR is merged.
-const deployNote: string = "Deployed by the per-app pipeline: only products was rebuilt";
+const deployNote: string = "Deployed by the v7 per-app pipeline: only products was rebuilt";
 
 export default function ListPage() {
   return (
