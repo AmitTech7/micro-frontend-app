@@ -271,6 +271,35 @@ From now on: merge to `main` -> CI passes -> Actions deploys products and cart, 
 
 ---
 
+## Step 10: Deploy only the app that changed
+
+Steps 8 and 9 deployed **all three apps** on every PR and merge. That is slow, and a remote change does not need a host rebuild (the host loads the remote at runtime). Step 10 replaces `deploy-preview.yml` and `deploy-prod.yml` with:
+
+| File | Job |
+|---|---|
+| `_deploy.yml` | Reusable. The one place that runs `vercel deploy` (`--prod` only for production). |
+| `deploy-products.yml` | Runs when `products/**` changes |
+| `deploy-cart.yml` | Runs when `cart/**` changes |
+| `deploy-host.yml` | Runs when `host/**` changes |
+
+How each per-app file works:
+- **Pull request** -> a **preview** deploy. **Push to `main`** (a merged PR) -> a **production** deploy.
+- `paths:` decides if it runs at all. Besides its own folder, it also runs for shared files: `pnpm-lock.yaml`, root `package.json`, `pnpm-workspace.yaml` and `.github/workflows/**`. Changes to those can affect every app, so all three deploy.
+- Docs-only changes (`*.md`) run no deploy.
+- `ci.yml` has **no** `paths:`. It stays the required check, and it always builds all three apps.
+- Previews use the same remote build as production, so the `[SENSITIVE]` problem is gone for previews too.
+
+Limits to know:
+- If one merge changes several apps, they deploy **at the same time** (no more "remotes first").
+- If you change the `mount` contract (how host and remote talk), ship the remote in one PR first, then the host in a second PR.
+
+How to test it:
+1. Change only a line in `products/src/pages/ListPage.tsx` and open a PR. Only **Deploy products** should run (plus CI).
+2. Merge. Only one production deploy runs, and `mf-host` and `mf-cart` show no new deployment in Vercel.
+3. Change only a `.md` file. Only CI runs.
+
+---
+
 ## Troubleshooting
 
 | Problem | Likely cause / fix |

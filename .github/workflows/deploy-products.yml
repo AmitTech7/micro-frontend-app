@@ -1,0 +1,35 @@
+name: Deploy products
+
+# Pull request -> preview deploy. Push to main (a merged PR) -> production deploy.
+# Runs only when products (or a shared root file) changed.
+on:
+  pull_request:
+    paths:
+      - "products/**"
+      - "pnpm-lock.yaml"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/**"
+  push:
+    branches: [main]
+    paths:
+      - "products/**"
+      - "pnpm-lock.yaml"
+      - "package.json"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/**"
+
+# A newer preview replaces an older one on the same PR. Production deploys always finish.
+concurrency:
+  group: deploy-products-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/_deploy.yml
+    with:
+      environment: ${{ github.event_name == 'push' && 'production' || 'preview' }}
+    secrets:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PRODUCTS_ID }}

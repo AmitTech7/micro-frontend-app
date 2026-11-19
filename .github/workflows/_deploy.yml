@@ -1,0 +1,36 @@
+name: Deploy (reusable)
+
+# Called by deploy-products.yml, deploy-cart.yml and deploy-host.yml.
+# It uploads the source and lets Vercel build it on Vercel's own servers
+# (no "vercel pull" / "--prebuilt"), so Vercel can read every environment variable,
+# including ones marked Sensitive.
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: "production or preview"
+        type: string
+        required: true
+    secrets:
+      VERCEL_TOKEN:
+        required: true
+      VERCEL_ORG_ID:
+        required: true
+      VERCEL_PROJECT_ID:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Deploy to Vercel (${{ inputs.environment }})
+        run: npx --yes vercel@latest deploy --yes ${{ inputs.environment == 'production' && '--prod' || '' }}
