@@ -7,10 +7,15 @@ const products: Product[] = [
   { id: 4, name: "27\" Monitor", price: 210 },
 ];
 
+// CI/CD demo: this visible line should only appear on the live site after the PR is merged.
+// The type below is deliberately wrong (a string assigned to a number) so CI fails first.
+const deployNote: number = "Deployed through the CI/CD pipeline";
+
 export default function ListPage() {
   return (
     <div>
       <h2>Products</h2>
+      <p>{deployNote}</p>
       <ul>
         {products.map((p) => (
           <li key={p.id}>
