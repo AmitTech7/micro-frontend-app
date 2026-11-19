@@ -254,16 +254,11 @@ When both are green, merge.
 
 Only do this after step 8 works.
 
-1. Create `.github/workflows/deploy-prod.yml` by copying the preview file, and change:
-   - `on:` to
-     ```yaml
-     on:
-       push:
-         branches: [main]
-     ```
-   - `--environment=preview` to `--environment=production`
-   - `vercel build` to `vercel build --prod`
-   - `vercel deploy --prebuilt` to `vercel deploy --prebuilt --prod`
+1. Create `.github/workflows/deploy-prod.yml` (already in this repo). It triggers on `push` to `main` and has the same two jobs as the preview file (remotes first, then host), but the deploy step is just:
+   ```yaml
+   - run: npx --yes vercel@latest deploy --prod --yes
+   ```
+   There is no `vercel pull`, `vercel build` or `--prebuilt`. The source is uploaded and **Vercel builds it on its own servers**. Reason: `vercel pull` cannot download variables marked **Sensitive** (it writes the text `[SENSITIVE]` instead), which breaks `PRODUCTS_URL` / `CART_URL` in the host build. A build on Vercel can read them.
 2. Stop Vercel from also deploying on push. In each of `host/vercel.json`, `products/vercel.json`, `cart/vercel.json` add:
    ```json
    "git": { "deploymentEnabled": false }
